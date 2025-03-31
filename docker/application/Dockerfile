@@ -8,10 +8,10 @@ RUN docker-php-ext-install pdo pdo_mysql
 
 FROM base AS dev
 
-COPY docker/caddy/Caddyfile /etc/caddy/Caddyfile
-COPY docker/supervisor/ /etc/supervisor.d/
-COPY docker/php/php.ini "$PHP_INI_DIR/php.ini"
-COPY docker/php/xdebug.ini "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
+COPY application/caddy/Caddyfile /etc/caddy/Caddyfile
+COPY application/supervisor /etc/supervisor.d/
+COPY application/php/php.ini "$PHP_INI_DIR/php.ini"
+COPY application/php/xdebug.ini "$PHP_INI_DIR/conf.d/docker-php-ext-xdebug.ini"
 
 RUN apk add --no-cache $PHPIZE_DEPS linux-headers && \
     pecl install xdebug && \

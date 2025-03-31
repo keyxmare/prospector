@@ -1,12 +1,15 @@
 services:
   application:
-    build: .
+    build:
+      context: .
+      dockerfile: ./application/Dockerfile
+      target: dev
     container_name: prospector
     volumes:
-      - ./back:/var/www/html
-      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
-      - ./docker/supervisor/supervisord.conf:/etc/supervisord.conf:ro
-      - ./docker/supervisor/caddy.ini:/etc/supervisor.d/caddy.ini:ro
+      - ../back:/var/www/html
+      - ./application/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./application/supervisor/supervisord.conf:/etc/supervisord.conf:ro
+      - ./application/supervisor/caddy.ini:/etc/supervisor.d/caddy.ini:ro
     restart: unless-stopped
     networks:
       - prospector
@@ -27,7 +30,7 @@ services:
       - "443:443"
       - "80:80"
     volumes:
-      - ./docker/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - ./traefik/traefik.toml:/etc/traefik/traefik.toml:ro
       - /var/run/docker.sock:/var/run/docker.sock:ro
     networks:
       - traefik
@@ -40,5 +43,7 @@ services:
 
 networks:
   prospector:
+    name: prospector
   traefik:
     external: true
+    name: traefik
