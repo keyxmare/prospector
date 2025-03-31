@@ -28,7 +28,6 @@
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/polyfill-intl-grapheme" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/polyfill-intl-normalizer" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/polyfill-mbstring" />
-      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/polyfill-php83" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/routing" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/runtime" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/service-contracts" />
@@ -36,6 +35,12 @@
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/var-dumper" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/var-exporter" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/yaml" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/stopwatch" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/translation-contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/twig-bridge" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/twig-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/web-profiler-bundle" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/twig/twig" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
