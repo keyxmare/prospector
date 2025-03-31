@@ -1,0 +1,44 @@
+services:
+  application:
+    build: .
+    container_name: prospector
+    volumes:
+      - ./back:/var/www/html
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./docker/supervisor/supervisord.conf:/etc/supervisord.conf:ro
+      - ./docker/supervisor/caddy.ini:/etc/supervisor.d/caddy.ini:ro
+    restart: unless-stopped
+    networks:
+      - prospector
+      - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.application.rule=Host(`dev.prospector.com`)"
+      - "traefik.http.routers.application.entrypoints=web"
+      - "traefik.http.services.application.loadbalancer.server.port=80"
+
+  traefik:
+    image: traefik:v2.10
+    container_name: traefik
+    command:
+      - --configFile=/etc/traefik/traefik.toml
+    ports:
+      - "8080:8080"
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./docker/traefik/traefik.toml:/etc/traefik/traefik.toml:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - traefik
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.traefik.rule=Host(`dev.traefik.com`)"
+      - "traefik.http.routers.traefik.service=api@internal"
+      - "traefik.http.routers.traefik.entrypoints=web"
+
+networks:
+  prospector:
+  traefik:
+    external: true
