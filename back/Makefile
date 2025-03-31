@@ -14,7 +14,7 @@ help:  ## 🆘 Affiche cette aide
 	@echo ""
 
 shell:  ## 🐚 Ouvre un shell dans le conteneur PHP
-	docker compose -f docker/compose.yaml -p prospector exec application sh
+	docker compose -f docker/compose.yaml -p prospector exec application sh -c '$(filter-out $@,$(MAKECMDGOALS))'
 
 test:  ## ✅ Lance les tests PHPUnit
 	docker compose -f docker/compose.yaml -p prospector exec application php bin/phpunit
