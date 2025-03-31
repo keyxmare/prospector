@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Regex de validation du message de commit
+conventional_regex="^(build|chore|ci|docs|feat|fix|perf|refactor|revert|style|test)(\([a-z0-9_-]+\))?: .{1,}"
+
+commit_msg_file=$1
+commit_msg=$(head -n1 "$commit_msg_file")
+
+if ! echo "$commit_msg" | grep -Eq "$conventional_regex"; then
+  echo "❌ Le message de commit ne respecte pas la convention."
+  echo ""
+  echo "📝 Exemple attendu :"
+  echo "  feat(api): add endpoint to fetch data"
+  echo "  fix(login): handle incorrect password"
+  echo ""
+  exit 1
+fi
