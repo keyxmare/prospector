@@ -1,0 +1,75 @@
+#!/bin/bash
+
+# Fichier de sortie
+CHANGELOG_FILE="CHANGELOG.md"
+TMP_CHANGELOG=""
+
+init_changelog_file() {
+  if [ ! -f "$CHANGELOG_FILE" ]; then
+    echo -e "# Changelog\n\n## [Unreleased]\n" > "$CHANGELOG_FILE"
+  fi
+  TMP_CHANGELOG=$(mktemp)
+  echo -e "# Changelog\n" > "$TMP_CHANGELOG"
+}
+
+generate_changelog() {
+  init_changelog_file
+
+  echo "🔄 Génération du changelog..."
+
+  # Liste des tags Git par ordre chronologique
+  TAGS=($(git tag --sort=creatordate))
+  TAGS+=("HEAD") # Pour les commits non encore tagués (Unreleased)
+
+  TYPES=("build" "chore" "ci" "docs" "feat" "fix" "perf" "refactor" "revert" "style" "test")
+  TITLES=("Build" "Chore" "CI" "Documentation" "Fonctionnalité" "Corrigé" "Performances" "Refactorisation" "Revert" "Style" "Tests")
+
+  for ((i=${#TAGS[@]}-1; i>0; i--)); do
+    FROM=${TAGS[$i-1]}
+    TO=${TAGS[$i]}
+    generate_section "$FROM" "$TO" >> "$TMP_CHANGELOG"
+  done
+
+  mv "$TMP_CHANGELOG" "$CHANGELOG_FILE"
+
+  echo "✅ Changelog généré avec l'historique complet dans $CHANGELOG_FILE"
+}
+
+generate_section() {
+  local FROM="$1"
+  local TO="$2"
+
+  if [ "$TO" == "HEAD" ]; then
+    SECTION_TITLE="## [Unreleased]"
+  else
+    TAG_DATE=$(git log -1 --format=%ad --date=short "$TO")
+    SECTION_TITLE="## [$TO] - $TAG_DATE"
+  fi
+
+  echo -e "$SECTION_TITLE\n"
+
+  COMMITS=$(git log "$FROM".."$TO" --pretty=format:"%s" --reverse)
+
+  SECTION_CONTENT=""
+  for j in "${!TYPES[@]}"; do
+    TYPE="${TYPES[$j]}"
+    TITLE="${TITLES[$j]}"
+    SECTION=$(echo "$COMMITS" | grep "^$TYPE: " | sed "s/^$TYPE: /- /")
+    if [ -n "$SECTION" ]; then
+      SECTION_CONTENT+="### $TITLE\n$SECTION\n\n"
+    fi
+  done
+
+  OTHER_COMMITS=$(echo "$COMMITS" | grep -vE "^($(IFS="|"; echo "${TYPES[*]}")): ")
+  if [ -n "$OTHER_COMMITS" ]; then
+    SECTION_CONTENT+="### Autres\n"
+    SECTION_CONTENT+=$(echo "$OTHER_COMMITS" | sed "s/^/- /")
+    SECTION_CONTENT+="\n\n"
+  fi
+
+  echo -e "$SECTION_CONTENT"
+}
+
+generate_changelog
+
+git add CHANGELOG.md
