@@ -15,4 +15,7 @@
 - feat(docker): 🧰 ajout de Composer dans l'image Docker
 - feat(dev): 🧪 ajout de WebProfilerBundle pour dev/test
 
+### Autres
+- chore(hook): 🔧 ajout d’une fonction pour sauvegarder le dernier tag dans le .env
+
 

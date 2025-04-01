@@ -35,6 +35,12 @@ generate_changelog() {
   echo "✅ Changelog généré avec l'historique complet dans $CHANGELOG_FILE"
 }
 
+save_last_tag_to_env() {
+  # Sauvegarde du dernier tag dans le fichier .env
+  LAST_TAG=$(git for-each-ref --sort=-creatordate --format '%(refname:short)' refs/tags | head -n 1)
+  echo "VERSION=$LAST_TAG" > .env
+}
+
 generate_section() {
   local FROM="$1"
   local TO="$2"
@@ -70,6 +76,8 @@ generate_section() {
   echo -e "$SECTION_CONTENT"
 }
 
+save_last_tag_to_env
 generate_changelog
 
+git add .env
 git add CHANGELOG.md
