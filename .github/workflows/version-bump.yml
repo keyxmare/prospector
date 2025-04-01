@@ -1,0 +1,76 @@
+name: 🔖 Auto Version & Tag
+
+on:
+  workflow_dispatch:  # Lancement manuel
+
+jobs:
+  tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0  # Important pour accéder aux tags
+
+      - name: 🏷️ Get last tag
+        id: last-tag
+        run: |
+          echo "LAST_TAG=$(git describe --tags --abbrev=0)" >> $GITHUB_ENV
+
+      - name: 📜 Get commits since last tag
+        id: commits
+        run: |
+          git log ${LAST_TAG}..HEAD --pretty=format:"%s" > commits.txt
+          cat commits.txt
+
+      - name: 🧠 Determine new version (semantic)
+        id: bump
+        run: |
+          VERSION=${LAST_TAG#v}
+          MAJOR=$(echo "$VERSION" | cut -d. -f1)
+          MINOR=$(echo "$VERSION" | cut -d. -f2)
+          PATCH=$(echo "$VERSION" | cut -d. -f3)
+
+          # Ajout de valeurs par défaut si nécessaire
+          MAJOR=${MAJOR:-0}
+          MINOR=${MINOR:-0}
+          PATCH=${PATCH:-0}
+
+          # Types de commits et règles d'incrémentation
+          TYPES=("BREAKING CHANGE" "feat" "fix" "build" "chore" "ci" "docs" "perf" "refactor" "revert" "style" "test")
+          for TYPE in "${TYPES[@]}"; do
+            if grep -q "$TYPE" commits.txt; then
+              case "$TYPE" in
+                "BREAKING CHANGE")
+                  MAJOR=$((MAJOR+1))
+                  MINOR=0
+                  PATCH=0
+                  ;;
+                "feat")
+                  MINOR=$((MINOR+1))
+                  PATCH=0
+                  ;;
+                "fix"|"build"|"chore"|"ci"|"docs"|"perf"|"refactor"|"revert"|"style"|"test")
+                  PATCH=$((PATCH+1))
+                  ;;
+              esac
+            fi
+          done
+
+          # Vérification finale
+          NEW_VERSION="v$MAJOR.$MINOR.$PATCH"
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "📌 Nouvelle version : $NEW_VERSION"
+
+      - name: 📦 Create new tag
+        run: |
+          if [[ -z "$NEW_VERSION" || "$NEW_VERSION" == "v0.0.0" ]]; then
+            echo "❌ Version invalide, aucun tag créé."
+            exit 1
+          fi
+
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git tag $NEW_VERSION
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/keyxmare/prospector.git $NEW_VERSION
