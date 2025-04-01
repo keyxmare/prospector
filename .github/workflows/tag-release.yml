@@ -1,0 +1,29 @@
+name: 📦 Tag Release
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v3
+
+      - name: 🧪 Affiche le tag détecté
+        run: |
+          echo '🪪 Tag : ${{ github.ref_name }}'
+
+      - name: 📄 Générer le changelog
+        run: |
+          echo "# Changelog - Tag ${{ github.ref_name }}" > CHANGELOG.md
+          git log "$(git describe --tags --abbrev=0 HEAD^)"..HEAD --pretty=format:"- %h %s" >> CHANGELOG.md
+
+      - name: 📤 Créer la release GitHub
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          body_path: CHANGELOG.md
