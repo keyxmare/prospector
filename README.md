@@ -3,6 +3,7 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![PHP](https://img.shields.io/badge/php-8.4-blue.svg)]()
 [![Symfony](https://img.shields.io/badge/Symfony-7.2-black.svg)]()
+[![Latest Release](https://img.shields.io/github/v/tag/keyxmare/prospector?label=Latest%20Tag&style=flat-square)](https://github.com/keyxmare/prospector/releases)
 
 Prospector est un outil développé pour automatiser, simplifier et fiabiliser la récupération de données de toute sorte.
 
