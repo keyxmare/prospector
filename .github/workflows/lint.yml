@@ -1,0 +1,32 @@
+name: 🚀 Run PHPStan and Rector
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  phpstan-and-rector:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, dom, zip, intl
+
+      - name: Install dependencies
+        run: composer install --no-interaction
+        working-directory: ./back
+
+      - name: Run PHPStan
+        run: vendor/bin/phpstan analyse --configuration=phpstan.dist.neon --no-interaction
+        working-directory: ./back
+
+      - name: Run Rector
+        run: vendor/bin/rector process --config=rector.php
+        working-directory: ./back
