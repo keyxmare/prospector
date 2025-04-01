@@ -60,13 +60,13 @@ generate_section() {
   for j in "${!TYPES[@]}"; do
     TYPE="${TYPES[$j]}"
     TITLE="${TITLES[$j]}"
-    SECTION=$(echo "$COMMITS" | grep "^$TYPE: " | sed "s/^$TYPE: /- /")
+    SECTION=$(echo "$COMMITS" | grep -E "^$TYPE(\([^)]+\))?: " | sed -E "s/^$TYPE(\([^)]+\))?: /- /")
     if [ -n "$SECTION" ]; then
       SECTION_CONTENT+="### $TITLE\n$SECTION\n\n"
     fi
   done
 
-  OTHER_COMMITS=$(echo "$COMMITS" | grep -vE "^($(IFS="|"; echo "${TYPES[*]}")): ")
+  OTHER_COMMITS=$(echo "$COMMITS" | grep -vE "^($(IFS="|"; echo "${TYPES[*]}"))(\([^)]+\))?: ")
   if [ -n "$OTHER_COMMITS" ]; then
     SECTION_CONTENT+="### Autres\n"
     SECTION_CONTENT+=$(echo "$OTHER_COMMITS" | sed "s/^/- /")
