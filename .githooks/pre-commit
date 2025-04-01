@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Exécuter PHPStan
+echo "Running PHPStan..."
+docker compose -f docker/compose.yaml -p prospector exec -T application vendor/bin/phpstan analyse --configuration=phpstan.dist.neon --no-interaction
+if [ $? -ne 0 ]; then
+    echo "PHPStan failed. Commit aborted."
+    exit 1
+fi
+
+# Exécuter Rector
+echo "Running Rector..."
+docker compose -f docker/compose.yaml -p prospector exec -T application vendor/bin/rector process --config=rector.php
+if [ $? -ne 0 ]; then
+    echo "Rector failed. Commit aborted."
+    exit 1
+fi
+
+echo "PHPStan and Rector passed. Proceeding with commit."

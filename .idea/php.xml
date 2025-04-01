@@ -71,6 +71,12 @@
       <path value="$PROJECT_DIR$/back/vendor/symfony/stopwatch" />
       <path value="$PROJECT_DIR$/back/vendor/symfony/translation-contracts" />
       <path value="$PROJECT_DIR$/back/vendor/twig/twig" />
+      <path value="$PROJECT_DIR$/back/vendor/symfony/polyfill-php83" />
+      <path value="$PROJECT_DIR$/back/vendor/rector/rector" />
+      <path value="$PROJECT_DIR$/back/vendor/phpstan/phpstan" />
+      <path value="$PROJECT_DIR$/back/vendor/phpstan/phpstan-strict-rules" />
+      <path value="$PROJECT_DIR$/back/vendor/phpstan/phpstan-symfony" />
+      <path value="$PROJECT_DIR$/back/vendor/phpstan/phpstan-phpunit" />
     </include_path>
   </component>
   <component name="PhpInterpreters">
@@ -145,6 +151,7 @@
   <component name="PhpStan">
     <PhpStan_settings>
       <phpstan_by_interpreter asDefaultInterpreter="true" interpreter_id="32563b17-0e03-46a6-9523-06072e07e2b4" timeout="60000" />
+      <PhpStanConfiguration tool_path="$PROJECT_DIR$/back/vendor/bin/phpstan" />
     </PhpStan_settings>
   </component>
   <component name="PhpStanOptionsConfiguration">

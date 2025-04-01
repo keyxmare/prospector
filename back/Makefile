@@ -1,6 +1,6 @@
 # 🧠 Makefile Symfony (back/) — Commandes utiles pour le développement PHP ⚙️
 
-.PHONY: help shell test xdebug-on xdebug-off cache-clear migrations symfony
+.PHONY: help shell test xdebug-on xdebug-off cache-clear migrations symfony phpstan rector
 
 .DEFAULT_GOAL := help
 
@@ -14,7 +14,7 @@ help:  ## 🆘 Affiche cette aide
 	@echo ""
 
 shell:  ## 🐚 Ouvre un shell dans le conteneur PHP
-	docker compose -f docker/compose.yaml -p prospector exec application sh -c '$(filter-out $@,$(MAKECMDGOALS))'
+	docker compose -f docker/compose.yaml -p prospector exec application sh -c sh
 
 test:  ## ✅ Lance les tests PHPUnit
 	docker compose -f docker/compose.yaml -p prospector exec application php bin/phpunit
@@ -33,3 +33,9 @@ migrations:  ## 🗄️ Exécute les migrations Doctrine
 
 symfony:  ## 🧰 Exécute une commande Symfony personnalisée
 	docker compose -f docker/compose.yaml -p prospector exec application php bin/console $(filter-out $@,$(MAKECMDGOALS))
+
+phpstan: ## 🕵️‍♂️ Analyse statique du code avec PHPStan
+	docker compose -f docker/compose.yaml -p prospector exec application vendor/bin/phpstan analyse --configuration=phpstan.dist.neon
+
+rector: ## 🔧 Applique des refactorisations automatiques avec Rector
+	docker compose -f docker/compose.yaml -p prospector exec application vendor/bin/rector process --config=rector.php

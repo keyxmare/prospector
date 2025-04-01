@@ -45,6 +45,10 @@
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/twig-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/symfony/web-profiler-bundle" />
       <excludeFolder url="file://$MODULE_DIR$/back/vendor/twig/twig" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/rector/rector" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/phpstan/phpstan-phpunit" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/phpstan/phpstan-strict-rules" />
+      <excludeFolder url="file://$MODULE_DIR$/back/vendor/phpstan/phpstan-symfony" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
